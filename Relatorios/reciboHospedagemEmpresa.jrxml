@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reciboHospedagem" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="eedd2d4a-8371-4ba2-8b24-0791fd470712">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="622"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#A9A9A9">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#FFEFEF"/>
+		</conditionalStyle>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#A9A9A9">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#FFEFEF"/>
+		</conditionalStyle>
+	</style>
+	<subDataset name="New Dataset 1" uuid="6fc189e2-727b-4c22-906c-6d7cd2f774b1">
+		<parameter name="idHospedagem" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT a.* FROM tbl_acompanhantes a INNER JOIN tbl_hospedagem h ON a.acompanhantes_hospedagem_id = h.hospedagem_id WHERE a.acompanhantes_hospedagem_id = $P{idHospedagem}]]>
+		</queryString>
+		<field name="acompanhantes_id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="acompanhantes_nome" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="acompanhantes_cpf" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="acompanhantes_hospedagem_id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="New Dataset 2" uuid="1db836bf-b676-46f4-aa56-e1638b36f76b">
+		<parameter name="idHospedagem" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT p.* FROM tbl_produtos_hospedagem p INNER JOIN tbl_hospedagem h ON p.produtos_hospedagem_hospedagem_id = h.hospedagem_id WHERE p.produtos_hospedagem_hospedagem_id = $P{idHospedagem}]]>
+		</queryString>
+		<field name="produtos_hospedagem_id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="produtos_hospedagem_produtos_id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="produtos_hospedagem_nome" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="produtos_hospedagem_produtos_valor" class="java.lang.Double">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="produtos_hospedagem_quantidade" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="produtos_hospedagem_hospedagem_id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<parameter name="hospedagemID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT c.*, cli.*, h.*, p.*,SUM(p.produtos_hospedagem_produtos_valor) AS SOMA, (SELECT cli.cliente_CPF_CNPJ FROM tbl_cliente cli RIGHT JOIN tbl_hospedagem h on cli.cliente_id=h.hospedagem_cliente_empresa_id WHERE h.hospedagem_id = $P{hospedagemID} AND LENGTH(cli.cliente_CPF_CNPJ) > 11) AS CNPJ FROM tbl_cabecalho c, tbl_cliente cli INNER JOIN tbl_hospedagem h on cli.cliente_id=h.hospedagem_cliente_id LEFT JOIN tbl_produtos_hospedagem p on h.hospedagem_id = p.produtos_hospedagem_hospedagem_id WHERE h.hospedagem_id = $P{hospedagemID}]]>
+	</queryString>
+	<field name="cabecalho_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cabecalho_logo" class="java.lang.Object">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cabecalho_linha_1" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cabecalho_linha_2" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cabecalho_linha_3" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cabecalho_linha_4" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente_nome" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente_RG" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente_CPF_CNPJ" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente_endereco_logradouro" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente_endereco_numero" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente_endereco_bairro" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente_endereco_cidade" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente_endereco_estado" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente_telefone" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente_endereco_complemento" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente_endereco_cep" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cliente_razao_social" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_cliente_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_cliente_nome" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_quarto_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_quarto_numero" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_usuario_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_usuario_nome" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_status" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_checkin_data" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_checkin_hora" class="java.sql.Time">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_checkout_data" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_checkout_hora" class="java.sql.Time">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_valor_total" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_valor_diaria" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_forma_pagamento" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_veiculo_placa" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_veiculo_marca" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_total_diarias" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_quantidade_diarias" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_valor_desconto" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_cliente_empresa_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hospedagem_cliente_empresa_nome" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="produtos_hospedagem_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="produtos_hospedagem_produtos_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="produtos_hospedagem_nome" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="produtos_hospedagem_produtos_valor" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="produtos_hospedagem_quantidade" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="produtos_hospedagem_hospedagem_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="SOMA" class="java.lang.Double"/>
+	<field name="CNPJ" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="92" splitType="Stretch">
+			<rectangle radius="5">
+				<reportElement x="0" y="0" width="555" height="92" uuid="b952f24b-bbdd-4288-9b83-2f0a18881296"/>
+			</rectangle>
+			<image>
+				<reportElement x="15" y="0" width="97" height="92" uuid="9f16abb5-5673-4182-afea-28137c0511a5"/>
+				<imageExpression><![CDATA[new ByteArrayInputStream((byte[])$F{cabecalho_logo})]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="112" y="6" width="443" height="20" uuid="37298bf4-7c4e-495b-90fa-ee45c622023b"/>
+				<textElement textAlignment="Center">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cabecalho_linha_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="112" y="26" width="443" height="20" uuid="856818c2-aaf1-4368-a7ef-f609670069d4"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cabecalho_linha_2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="112" y="46" width="443" height="20" uuid="0dcb0a86-cc97-4435-a9ab-f185ff44bfb3"/>
+				<textElement textAlignment="Center">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cabecalho_linha_3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="112" y="66" width="443" height="20" uuid="7bfcb948-736d-4313-a285-a16d2deee4eb"/>
+				<textElement textAlignment="Center">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cabecalho_linha_4}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="418" splitType="Stretch">
+			<rectangle radius="5">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="555" height="418" uuid="c371d74f-c8dc-4193-a8dc-7939e9204b2a"/>
+			</rectangle>
+			<textField pattern="###.###.###-##">
+				<reportElement x="297" y="40" width="258" height="20" uuid="7ac63581-8814-437f-ae2d-f59e60989e09"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[java.util.regex.Pattern.compile("(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})").matcher($F{CNPJ}).replaceAll("\$1.\$2.\$3.\$4/\$5")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="40" width="297" height="20" uuid="319d2983-db72-4313-8987-a1dda490add1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hospedagem_cliente_empresa_nome}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="20" width="297" height="20" forecolor="#000000" backcolor="#666666" uuid="a856116f-c034-44a0-ae8a-168e97437200"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Empresa]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="297" y="20" width="258" height="20" forecolor="#000000" backcolor="#666666" uuid="83c53714-646f-45d1-a5a7-b328f7f74fe2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[CNPJ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="12" y="0" width="529" height="20" uuid="469afd4d-0676-49c7-925e-36668622370f"/>
+				<textElement verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[RESUMO DA HOSPEDAGEM]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="98" width="555" height="1" uuid="b14cd4dd-5e6a-4411-a8cc-18bddc8ca554"/>
+			</line>
+			<staticText>
+				<reportElement x="12" y="99" width="529" height="20" uuid="e7bebe6c-850f-4f2e-801c-027806396f32"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[CHECKIN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="119" width="297" height="20" forecolor="#000000" backcolor="#666666" uuid="b0dd1d17-ef61-420d-98ad-e2e03fac1bca"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Entrada]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="0" y="139" width="297" height="20" uuid="37cf1240-92db-4653-bc5e-3cb95f5c8297"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hospedagem_checkin_data}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="297" y="139" width="258" height="20" uuid="3fcf3294-a79e-42e3-9080-da9569ccd0b7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hospedagem_quarto_numero}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="297" y="119" width="258" height="20" forecolor="#000000" backcolor="#666666" uuid="5301339c-fa25-4686-860b-48998168c6e8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Quarto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="12" y="159" width="529" height="20" uuid="33c29338-f2b1-478a-88cf-fa89eeda3bfc"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[ACOMPANHANTES]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table 1" style="table" x="0" y="179" width="555" height="35" uuid="0c63cb08-1ada-4b1a-ab8e-3c2568b520cc"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="New Dataset 1" uuid="b1305d9b-2a27-40bd-bd8a-bc069b83d563">
+						<datasetParameter name="idHospedagem">
+							<datasetParameterExpression><![CDATA[$P{hospedagemID}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="282" uuid="d2aa0903-a8b3-4e3e-8c12-6a1d2ada8ce3">
+						<jr:tableHeader style="table 1_TH" height="22" rowSpan="1">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="282" height="22" backcolor="#666666" uuid="0618fa1f-b5a5-4aab-acf6-0cc8c6bc2987"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="10"/>
+								</textElement>
+								<text><![CDATA[Nome]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="282" height="20" uuid="6f81ca7d-d616-4e82-88ca-012a84340878"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{acompanhantes_nome}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="273" uuid="f56e0e53-dd10-4607-9ccc-d9e610a59407">
+						<jr:tableHeader style="table 1_TH" height="22" rowSpan="1">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="273" height="22" backcolor="#666666" uuid="5c40e3ad-7ca8-44e1-abb0-168885014827"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="10"/>
+								</textElement>
+								<text><![CDATA[CPF]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="273" height="20" uuid="105fe693-4f8b-41f8-b7f7-30c466ef72d9"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[java.util.regex.Pattern.compile("(\\d{3})(\\d{3})(\\d{3})(\\d{2})").matcher($F{acompanhantes_cpf}).replaceAll("\$1.\$2.\$3-\$4")]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<line>
+				<reportElement positionType="Float" x="0" y="214" width="555" height="1" uuid="41d49a6d-b538-424e-9c86-9e8c888e268a"/>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="12" y="215" width="529" height="20" uuid="b5d48c2c-1aa9-4c68-b921-436c7a498c41"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[CHECKOUT]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement positionType="Float" x="0" y="255" width="297" height="20" uuid="7ea6d13a-6e19-4d09-834b-faaf42574257"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hospedagem_checkout_data}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="0" y="235" width="297" height="20" forecolor="#000000" backcolor="#666666" uuid="59f0985e-b5a8-40c1-a811-838c30a6897b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Saída]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table 1" style="table" positionType="Float" x="0" y="330" width="555" height="35" uuid="5534b23e-cb1b-4c16-b271-b52ec329d4f2"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="New Dataset 2" uuid="763dab61-18ef-4e0b-a22d-b6cf82552122">
+						<datasetParameter name="idHospedagem">
+							<datasetParameterExpression><![CDATA[$P{hospedagemID}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="282" uuid="3e62d010-1100-42ca-b4ff-1a1c57a01a3f">
+						<jr:tableHeader style="table 1_TH" height="22" rowSpan="1">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="282" height="22" backcolor="#666666" uuid="2d86e702-5df4-4d25-88bc-599ab874995a"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="10"/>
+								</textElement>
+								<text><![CDATA[Produto]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="282" height="20" uuid="5334763b-2cb6-4312-9ce8-593f3ea5c32f"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{produtos_hospedagem_nome}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="115" uuid="a6a5470b-b9ff-4727-9d09-9a0674596de8">
+						<jr:tableHeader style="table 1_TH" height="22" rowSpan="1">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="115" height="22" backcolor="#666666" uuid="9f2ff108-2bbc-4204-a56b-5edf7d4f23f0"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="10"/>
+								</textElement>
+								<text><![CDATA[Quantidade]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="115" height="20" uuid="17c2de04-7585-40a0-8d42-a07338215192"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{produtos_hospedagem_quantidade}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="158" uuid="a735c444-a94e-46be-9075-8213ff08f936">
+						<jr:tableHeader height="22" rowSpan="1">
+							<staticText>
+								<reportElement mode="Opaque" x="1" y="0" width="157" height="22" backcolor="#666666" uuid="d22a64c3-8755-4438-b928-4feaaa677ad3"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Valor]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell height="20" rowSpan="1">
+							<textField pattern="¤ #,##0.00">
+								<reportElement x="0" y="0" width="158" height="20" uuid="20d55633-ac0a-480d-a787-fe5a2605d245"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isUnderline="false" isStrikeThrough="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{produtos_hospedagem_produtos_valor}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<line>
+				<reportElement positionType="Float" x="0" y="274" width="555" height="1" uuid="def677d7-82eb-4753-be9c-f6a54fe0d3be"/>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="0" y="158" width="555" height="1" uuid="ef17e537-211d-46fe-a5f1-cdd75fd8bcbc"/>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="0" y="310" width="165" height="20" forecolor="#000000" backcolor="#666666" uuid="4841b76a-f93b-421d-8089-4536926ced7a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[PRODUTOS CONSUMIDOS]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement positionType="Float" x="297" y="310" width="258" height="20" uuid="9118fa2d-c0f3-4608-b719-358b0a78e3aa"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SOMA} == null ?
+"Nenhum produto consumido" :$F{SOMA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement positionType="Float" x="297" y="255" width="258" height="20" uuid="d8686d97-3502-455a-a956-5e09cf1b9fcb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hospedagem_quantidade_diarias}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="297" y="235" width="258" height="20" forecolor="#000000" backcolor="#666666" uuid="86a59b5e-b7e1-4c79-80a3-297217358c63"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Diárias]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement positionType="Float" x="297" y="290" width="258" height="20" uuid="d608d9d4-3dff-47a0-8a12-be6233be7e43"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hospedagem_total_diarias}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="0" y="290" width="165" height="20" forecolor="#000000" backcolor="#666666" uuid="6f5b19ac-124f-4f0c-a222-e1c93c4eab5a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[VALOR TOTAL DAS DIÁRIAS]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement positionType="Float" x="297" y="365" width="258" height="20" forecolor="#FF0000" uuid="d6a57019-33c9-4c8f-ba24-3726698befb7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hospedagem_valor_desconto}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="0" y="365" width="165" height="20" forecolor="#000000" backcolor="#666666" uuid="798d4e41-a55a-4456-a823-12b3b5d084d8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[DESCONTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="0" y="385" width="165" height="20" forecolor="#000000" backcolor="#666666" uuid="f7f6c6dc-1bb8-4a61-97bb-b4d5266c172f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement positionType="Float" x="297" y="385" width="258" height="20" forecolor="#000000" uuid="5f9873a7-00a0-4457-933a-1bac816fa0d9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hospedagem_valor_total}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="0" y="385" width="555" height="1" uuid="abfe71ba-544d-4d0a-91cf-3ebb88eaff52"/>
+			</line>
+			<textField>
+				<reportElement x="0" y="80" width="297" height="20" uuid="91e5b9b0-a354-44e8-a5e7-555a8033a479"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hospedagem_cliente_nome}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="297" y="60" width="258" height="20" forecolor="#000000" backcolor="#666666" uuid="536a323a-ff48-480a-808e-298f03f3c3de"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[CPF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="60" width="297" height="20" forecolor="#000000" backcolor="#666666" uuid="b7a68ed7-5034-4e5b-98a4-4a2883a26a21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Hóspede]]></text>
+			</staticText>
+			<textField pattern="###.###.###-##">
+				<reportElement x="297" y="80" width="258" height="20" uuid="877d4afc-595a-4126-bd98-c05adc60370a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[java.util.regex.Pattern.compile("(\\d{3})(\\d{3})(\\d{3})(\\d{2})").matcher($F{cliente_CPF_CNPJ}).replaceAll("\$1.\$2.\$3-\$4")]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<columnFooter>
+		<band height="131" splitType="Stretch">
+			<line>
+				<reportElement x="165" y="59" width="240" height="1" uuid="1e5c3e34-436e-49cf-b820-4d3ab1623ede"/>
+			</line>
+			<staticText>
+				<reportElement x="165" y="60" width="240" height="20" uuid="680995c4-6f65-4a15-a7c2-0c0880dabfc6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[ASSINATURA DO CLIENTE]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="f3377125-0790-478e-9ca6-2bf52d971fde"/>
+			</line>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="0" y="0" width="165" height="20" uuid="88e546f0-cbe0-4ef3-a8e5-56a8f24ab14e"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="526" y="0" width="40" height="20" uuid="e7c40dfd-2386-4e1d-a7c1-b8e890da6b97"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="446" y="0" width="80" height="20" uuid="e2b96417-d4b6-4f15-808a-7a9da5293b88"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
